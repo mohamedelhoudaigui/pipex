@@ -6,7 +6,7 @@
 /*   By: mel-houd <mel-houd@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 02:49:12 by mel-houd          #+#    #+#             */
-/*   Updated: 2023/12/14 02:56:10 by mel-houd         ###   ########.fr       */
+/*   Updated: 2023/12/14 08:15:24 by mel-houd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,9 +67,5 @@ char	**check_command(char *command)
 		i++;
 		free(str);
 	}
-	i = 0;
-	while (com[i])
-		free(com[i++]);
-	free(com);
     return (NULL);
 }

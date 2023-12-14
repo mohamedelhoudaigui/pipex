@@ -18,23 +18,24 @@ SRCS = ./libft/printf/ft_printf.c \
 	./libft/ft_putstr_fd.c  ./libft/ft_strjoin.c ./libft/ft_strmapi.c ./libft/ft_strtrim.c ./libft/ft_striteri.c \
 	./libft/ft_lstadd_back_bonus.c ./libft/ft_lstadd_front_bonus.c ./libft/ft_lstclear_bonus.c \
 	./libft/ft_lstdelone_bonus.c ./libft/ft_lstiter_bonus.c ./libft/ft_lstlast_bonus.c \
-	./libft/ft_lstmap_bonus.c ./libft/ft_lstnew_bonus.c ./libft/ft_lstsize_bonus.c
-
-
+	./libft/ft_lstmap_bonus.c ./libft/ft_lstnew_bonus.c ./libft/ft_lstsize_bonus.c \
+	./libft/get_next_line.c ./libft/get_next_line_utils.c
 
 # Compiler and flags
 CC = cc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -fsanitize=address
 
 NAME = pipex
 
 all: $(NAME)
 
-$(NAME): $(SRCS) pipex.h
-	@$(CC) $(CFLAGS) -o $(NAME) $(SRCS)
+$(NAME): $(SRCS) pipex.h Makefile
+	$(CC) $(CFLAGS) -o $(NAME) $(SRCS)
 
 clean:
-	@$(RM) $(NAME)
+	$(RM) $(NAME)
+
+fclean: clean
 
 re: clean all
 

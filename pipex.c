@@ -6,14 +6,50 @@
 /*   By: mel-houd <mel-houd@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 02:49:17 by mel-houd          #+#    #+#             */
-/*   Updated: 2023/12/14 02:56:17 by mel-houd         ###   ########.fr       */
+/*   Updated: 2023/12/14 08:12:20 by mel-houd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-int main(int ac, char **av)
+void	process_job(int *fd, char **exec_args, int inout, char str)
 {
+	if (str == 'i')
+	{
+		close(fd[0]);
+		dup2(fd[1], 1);
+		dup2(inout, 0);
+		close(fd[1]);
+		close(inout);
+		execve(exec_args[0], exec_args, NULL);
+		perror("execve");
+		
+	}
+	else if (str == 'o')
+	{
+		close(fd[1]);
+		dup2(fd[0], 0);
+		dup2(inout, 1);
+		close(fd[0]);
+		close(inout);
+		execve(exec_args[0], exec_args, NULL);
+		perror("execv");
+	}
+}
+
+void	main_helper(int *fd, int input, int output)
+{
+	close(fd[0]);
+	close(fd[1]);
+	close(input);
+	close(output);
+}
+
+int main(int ac, char **av, char **env)
+{
+	for (int i=0; env[i]; i++) {
+		printf("%s\n", env[i]);
+	}
     if (ac == 5)
     {
         int 	input;
@@ -23,58 +59,31 @@ int main(int ac, char **av)
 		int		fd[2];
 		int		pid;
 		int		pid2;
-		char 	*exec_args[] = {NULL, NULL, NULL};
-		char 	*exec_args2[] = {NULL, NULL, NULL};
+		char 	**exec_args;
+		char 	**exec_args2;
 
 		if (mini_parser(av[2], av[3]) == 1)
 			return (1);
-		input = open(av[1], O_RDWR, 0600);
-		output = open(av[4], O_RDWR, 0600);
 		str = check_command(av[2]);
 		str2 = check_command(av[3]);
+		init_variables(&input, &output, str, str2, &exec_args, &exec_args2, av);
 		if (error_handler(input, output, fd, str, str2) == 1)
 			return (1);
-		exec_args[0] = str[0];
-		exec_args2[0] = str2[0];
-		if (str[1] != NULL)
-			exec_args[1] = str[1];
-		if (str2[1] != NULL)
-			exec_args2[1] = str2[1];
 		pid = fork();
-		if (check_pid(pid) == 1)
-			return (1);
 		if (pid == 0)
-		{
-			close(fd[0]);
-			dup2(fd[1], 1);
-			dup2(input, 0);
-			close(fd[1]);
-			close(input);
-			execve(exec_args[0], exec_args, NULL);
-			perror("execve");
-			free_dpointer(str, str2);
-		}
+			process_job(fd, exec_args, input, 'i');
 		pid2 = fork();
-		if (check_pid(pid2) == 1)
+		if (check_pid(pid, pid2) == 1)
 			return (1);
 		if (pid2 == 0)
+			process_job(fd, exec_args2, output, 'o');
+		if (pid != 0 && pid2 != 0)
 		{
-			close(fd[1]);
-			dup2(fd[0], 0);
-			dup2(output, 1);
-			close(fd[0]);
-			close(output);
-			execve(exec_args2[0], exec_args2, NULL);
-			perror("execve");
-			free_dpointer(str, str2);
+			main_helper(fd, input, output);
+			waitpid(pid, NULL, 0);
+			waitpid(pid2, NULL, 0);
+			free_dpointer(str, str2, exec_args, exec_args2);
 		}
-		close(fd[0]);
-		close(fd[1]);
-		close(input);
-		close(output);
-		waitpid(pid, NULL, 0);
-		waitpid(pid2, NULL, 0);
-		free_dpointer(str, str2);
     }
 	else
 	{
