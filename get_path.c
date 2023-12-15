@@ -1,13 +1,25 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_path.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mel-houd <mel-houd@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/12/15 08:25:37 by mel-houd          #+#    #+#             */
+/*   Updated: 2023/12/15 19:53:14 by mel-houd         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "pipex.h"
 
 char	**split_path(char **env)
 {
 	int		i;
-	char	*PATH;
-	char	**splited_PATH;
+	char	*path;
+	char	**splited_path;
 
 	i = 0;
-	if (env[i] == NULL)
+	if (env == NULL || env[i] == NULL)
 		return (NULL);
 	while (env[i])
 	{
@@ -15,15 +27,15 @@ char	**split_path(char **env)
 			break ;
 		i++;
 	}
-	PATH = ft_strtrim(env[i], "PATH=");
-	if (!PATH)
+	path = ft_strtrim(env[i], "PATH=");
+	if (!path)
 		return (NULL);
-	splited_PATH = ft_split(PATH, ':');
-	if (!splited_PATH)
+	splited_path = ft_split(path, ':');
+	if (!splited_path)
 	{
-		free(PATH);
+		free(path);
 		return (NULL);
 	}
-	free(PATH);
-	return (splited_PATH);
+	free(path);
+	return (splited_path);
 }

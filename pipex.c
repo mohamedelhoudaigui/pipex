@@ -5,12 +5,17 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: mel-houd <mel-houd@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/12/14 02:49:17 by mel-houd          #+#    #+#             */
-/*   Updated: 2023/12/15 01:39:13 by mel-houd         ###   ########.fr       */
+/*   Created: 2023/12/15 08:30:18 by mel-houd          #+#    #+#             */
+/*   Updated: 2023/12/16 00:43:52 by mel-houd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
+
+void	f()
+{
+	system("leaks pipex");
+}
 
 void	process_job(int *fd, char **exec_args, int inout, char str)
 {
@@ -22,8 +27,7 @@ void	process_job(int *fd, char **exec_args, int inout, char str)
 		close(fd[1]);
 		close(inout);
 		execve(exec_args[0], exec_args, NULL);
-		perror("execve");
-		
+		perror("execve error");
 	}
 	else if (str == 'o')
 	{
@@ -33,61 +37,66 @@ void	process_job(int *fd, char **exec_args, int inout, char str)
 		close(fd[0]);
 		close(inout);
 		execve(exec_args[0], exec_args, NULL);
-		perror("execv");
+		perror("execve error");
 	}
 }
 
-void	main_helper(int *fd, int input, int output)
+void	main_helper(t_pipex *args)
 {
-	close(fd[0]);
-	close(fd[1]);
-	close(input);
-	close(output);
+	close(args->fd[0]);
+	close(args->fd[1]);
+	close(args->input);
+	close(args->output);
+	waitpid(args->pid, NULL, 0);
+	waitpid(args->pid2, NULL, 0);
 }
 
-int main(int ac, char **av, char **env)
+t_pipex	*pipex(int ac, char **av, char **env)
 {
-    if (ac == 5)
-    {
-        int 	input;
-        int		output;
-		char	**str;
-		char	**str2;
-		int		fd[2];
-		int		pid;
-		int		pid2;
-		char 	**exec_args;
-		char 	**exec_args2;
-		char	**splited_path;
+	t_pipex	*args;
 
-		if (mini_parser(av[2], av[3]) == 1)
+	if (mini_parser(av, ac) == 1)
+		return (NULL);
+	args = (t_pipex *)malloc(sizeof(t_pipex));
+	if (!args)
+		return (NULL);
+	if (init_variables(args, av, env) == 1)
+		return (args);
+	args->pid = fork();
+	if (check_pid(args->pid) == 1)
+		return (args);
+	if (args->pid == 0)
+		process_job(args->fd, args->exec_args, args->input, 'i');
+	args->pid2 = fork();
+	if (check_pid(args->pid2) == 1)
+		return (args);
+	if (args->pid2 == 0)
+		process_job(args->fd, args->exec_args2, args->output, 'o');
+	if (args->pid != 0 && args->pid2 != 0)
+		main_helper(args);
+	return (args);
+}
+
+int	main(int ac, char **av, char **env)
+{
+	t_pipex	*args;
+	atexit(f);
+	if (ac == 5)
+	{
+		args = pipex(ac, av, env);
+		if (args == NULL)
 			return (1);
-		splited_path = split_path(env);
-		str = check_command(av[2], splited_path);
-		str2 = check_command(av[3], splited_path);
-		init_variables(&input, &output, str, str2, &exec_args, &exec_args2, av);
-		if (error_handler(input, output, fd, str, str2) == 1)
-			return (1);
-		pid = fork();
-		if (pid == 0)
-			process_job(fd, exec_args, input, 'i');
-		pid2 = fork();
-		if (check_pid(pid, pid2) == 1)
-			return (1);
-		if (pid2 == 0)
-			process_job(fd, exec_args2, output, 'o');
-		if (pid != 0 && pid2 != 0)
+		else
 		{
-			main_helper(fd, input, output);
-			waitpid(pid, NULL, 0);
-			waitpid(pid2, NULL, 0);
-			free_dpointer(str, str2, exec_args, exec_args2);
+			free_dpointer(args);
+			free(args);
+			return (0);
 		}
-    }
+	}
 	else
 	{
 		ft_printf("usage : infile cmd1 cmd2 outfile\n");
 		return (1);
 	}
-    return (0);
+	return (0);
 }

@@ -6,42 +6,47 @@
 /*   By: mel-houd <mel-houd@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 02:49:12 by mel-houd          #+#    #+#             */
-/*   Updated: 2023/12/15 01:36:20 by mel-houd         ###   ########.fr       */
+/*   Updated: 2023/12/16 00:33:53 by mel-houd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-int		check_only_spaces(char *str)
+int	check_only_spaces(char *str)
 {
 	int	i;
 
 	i = 0;
 	while (str[i])
 	{
-		if (str[i] != ' ')
+		if (str[i] != ' ' || (str[i] >= 9 && str[i] <= 13))
 			return (0);
 		i++;
 	}
 	return (1);
 }
 
-int		mini_parser(char *command1, char *command2)
+int	mini_parser(char **av, int ac)
 {
-	int	s1;
-	int	s2;
+	int	i;
 
-	s1 = 0;
-	s2 = 0;
-	if (command1[0] == '\0' || command2[0] == '\0')
+	i = 1;
+	while (av[i])
 	{
-		ft_printf("invalid input\n");
-		return (1);
-	}
-	if (check_only_spaces(command1) == 1 || check_only_spaces(command2) == 1)
-	{
-		ft_printf("invalid input\n");	
-		return (1);
+		if (i == 1)
+		{
+			if (av[i][0] == '\0' || av[ac - 1][0] == '\0')
+			{
+				ft_printf("invalid files\n");
+				return (1);
+			}
+		}
+		else if (av[i][0] == '\0' || check_only_spaces(av[i]) == 1)
+		{
+			ft_printf("invalid input\n");
+			return (1);
+		}
+		i++;
 	}
 	return (0);
 }
@@ -51,11 +56,18 @@ char	**check_command(char *command, char **path_splited)
 	char	**com;
 	int		i;
 	char	*str;
+	char	*padded;
+	int		key;
 
+	com = ft_split(command, ' ');
+	if (access(com[0], X_OK) == 0)
+		return (com);
+	key = 0;
 	if (path_splited == NULL)
 		return (NULL);
-	com = ft_split(command, ' ');
-	com[0] = ft_strjoin("/", com[0]);
+	padded = ft_strjoin("/", com[0]);
+	free(com[0]);
+	com[0] = padded;
 	i = 0;
 	while (path_splited[i])
 	{
@@ -64,10 +76,17 @@ char	**check_command(char *command, char **path_splited)
 		{
 			free(com[0]);
 			com[0] = str;
-        	return (com);
+			key = 1;
+			break ;
 		}
 		i++;
 		free(str);
 	}
-    return (NULL);
+	if (key == 1)
+		return (com);
+	i = 0;
+	while (com[i])
+		free(com[i++]);
+	free(com);
+	return (NULL);
 }

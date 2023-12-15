@@ -6,7 +6,7 @@
 /*   By: mel-houd <mel-houd@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 02:50:08 by mel-houd          #+#    #+#             */
-/*   Updated: 2023/12/15 01:38:56 by mel-houd         ###   ########.fr       */
+/*   Updated: 2023/12/16 00:51:23 by mel-houd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,18 +22,34 @@
 # include "./libft/libft.h"
 # include "./libft/printf/ft_printf.h"
 
+typedef struct s_pipex
+{
+	int		input;
+	int		output;
+	char	**str;
+	char	**str2;
+	int		fd[2];
+	int		pid;
+	int		pid2;
+	char	**exec_args;
+	char	**exec_args2;
+	char	**splited_path;
+}	t_pipex;
+
 int		check_only_spaces(char *str);
-int		mini_parser(char *command1, char *command2);
+int		mini_parser(char **av, int ac);
 char	**check_command(char *command, char **path_splited);
 
-int		error_handler(int infile, int outfile, int *fd_pipe, char **com1, char **com2);
-int		check_pid(int pid, int pid2);
-void	free_dpointer(char	**com1, char **com2, char **exec1, char **exec2);
+int		error_handler(t_pipex *args);
+int		check_pid(int pid);
+void	free_dpointer(t_pipex *args_add);
 
-void	init_variables(int *input, int *output, char **com1, char **com2, char ***exec_args1, char ***exec_args2, char **av);
+int		init_variables(t_pipex *args, char **av, char **env);
 
 void	process_job(int *fd, char **exec_args, int inout, char str);
 
 char	**split_path(char **env_addrs);
+
+t_pipex	*pipex(int ac, char **av, char **env);
 
 #endif

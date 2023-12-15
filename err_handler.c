@@ -6,39 +6,39 @@
 /*   By: mel-houd <mel-houd@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 02:51:55 by mel-houd          #+#    #+#             */
-/*   Updated: 2023/12/15 01:26:19 by mel-houd         ###   ########.fr       */
+/*   Updated: 2023/12/16 00:51:16 by mel-houd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-int		error_handler(int infile, int outfile, int *fd_pipe, char **com1, char **com2)
+int	error_handler(t_pipex *args)
 {
-	if (infile == -1 || outfile == -1)
+	if (args->input == -1 || args->output == -1)
 	{
-		ft_printf("problem in generating fd or invalid files\n");
+		ft_printf("problem in generating fd\n");
 		return (1);
 	}
-	if (pipe(fd_pipe) == -1)
+	if (pipe(args->fd) == -1)
 	{
 		perror("pipe error\n");
-		close(infile);
-		close(outfile);
+		close(args->input);
+		close(args->output);
 		return (1);
 	}
-	if (com1 == NULL || com2 == NULL)
+	if (!args->str || !args->str2 || !args->splited_path || !args->exec_args || !args->exec_args2)
 	{
 		ft_printf("command not found !\n");
-		close(infile);
-		close(outfile);
+		close(args->input);
+		close(args->output);
 		return (1);
 	}
 	return (0);
 }
 
-int		check_pid(int pid, int pid2)
+int	check_pid(int pid)
 {
-	if (pid == -1 || pid2 == -1)
+	if (pid == -1)
 	{
 		perror("fork error\n");
 		return (1);
@@ -46,17 +46,39 @@ int		check_pid(int pid, int pid2)
 	return (0);
 }
 
-void	free_dpointer(char	**com1, char **com2, char **exec1, char **exec2)
+void	free_dpointer(t_pipex *args)
 {
 	int	i;
-	free(com1);
-	free(com2);
+
+	if (args->str && args->str2)
+	{
+		free(args->str2);
+		free(args->str);
+	}
+	else if (args->str && !args->str2)
+	{
+		i = 0;
+		while (args->str[i])
+			free(args->str[i++]);
+		free(args->str);
+	}
+	else if (args->str2 && !args->str)
+	{
+		i = 0;
+		while (args->str2[i])
+			free(args->str2[i++]);
+		free(args->str2);
+	}
 	i = 0;
-	while (exec1[i])
-		free(exec1[i++]);
-	free(exec1);
+	while (args->exec_args[i])
+		free(args->exec_args[i++]);
+	free(args->exec_args);
 	i = 0;
-	while (exec2[i])
-		free(exec2[i++]);
-	free(exec2);
+	while (args->exec_args2[i])
+		free(args->exec_args2[i++]);
+	free(args->exec_args2);
+	i = 0;
+	while (args->splited_path[i])
+		free(args->splited_path[i++]);
+	free(args->splited_path);
 }
