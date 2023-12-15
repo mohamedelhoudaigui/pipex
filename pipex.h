@@ -6,7 +6,7 @@
 /*   By: mel-houd <mel-houd@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 02:50:08 by mel-houd          #+#    #+#             */
-/*   Updated: 2023/12/15 01:30:14 by mel-houd         ###   ########.fr       */
+/*   Updated: 2023/12/15 01:38:56 by mel-houd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,6 @@ void	init_variables(int *input, int *output, char **com1, char **com2, char ***e
 
 void	process_job(int *fd, char **exec_args, int inout, char str);
 
-char	**split_path(char ***env_addrs);
+char	**split_path(char **env_addrs);
 
 #endif

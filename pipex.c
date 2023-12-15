@@ -6,7 +6,7 @@
 /*   By: mel-houd <mel-houd@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 02:49:17 by mel-houd          #+#    #+#             */
-/*   Updated: 2023/12/15 01:36:26 by mel-houd         ###   ########.fr       */
+/*   Updated: 2023/12/15 01:39:13 by mel-houd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ int main(int ac, char **av, char **env)
 
 		if (mini_parser(av[2], av[3]) == 1)
 			return (1);
-		splited_path = split_path(&env);
+		splited_path = split_path(env);
 		str = check_command(av[2], splited_path);
 		str2 = check_command(av[3], splited_path);
 		init_variables(&input, &output, str, str2, &exec_args, &exec_args2, av);

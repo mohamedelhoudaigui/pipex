@@ -1,14 +1,12 @@
 #include "pipex.h"
 
-char	**split_path(char ***env_addrs)
+char	**split_path(char **env)
 {
 	int		i;
 	char	*PATH;
 	char	**splited_PATH;
-	char	**env;
 
 	i = 0;
-	env = *env_addrs;
 	if (env[i] == NULL)
 		return (NULL);
 	while (env[i])
