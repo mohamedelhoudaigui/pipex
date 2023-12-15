@@ -6,7 +6,7 @@
 /*   By: mel-houd <mel-houd@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 02:49:17 by mel-houd          #+#    #+#             */
-/*   Updated: 2023/12/14 08:12:20 by mel-houd         ###   ########.fr       */
+/*   Updated: 2023/12/15 01:36:26 by mel-houd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,9 +47,6 @@ void	main_helper(int *fd, int input, int output)
 
 int main(int ac, char **av, char **env)
 {
-	for (int i=0; env[i]; i++) {
-		printf("%s\n", env[i]);
-	}
     if (ac == 5)
     {
         int 	input;
@@ -61,11 +58,13 @@ int main(int ac, char **av, char **env)
 		int		pid2;
 		char 	**exec_args;
 		char 	**exec_args2;
+		char	**splited_path;
 
 		if (mini_parser(av[2], av[3]) == 1)
 			return (1);
-		str = check_command(av[2]);
-		str2 = check_command(av[3]);
+		splited_path = split_path(&env);
+		str = check_command(av[2], splited_path);
+		str2 = check_command(av[3], splited_path);
 		init_variables(&input, &output, str, str2, &exec_args, &exec_args2, av);
 		if (error_handler(input, output, fd, str, str2) == 1)
 			return (1);

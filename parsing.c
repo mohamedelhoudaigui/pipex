@@ -6,7 +6,7 @@
 /*   By: mel-houd <mel-houd@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 02:49:12 by mel-houd          #+#    #+#             */
-/*   Updated: 2023/12/14 08:15:24 by mel-houd         ###   ########.fr       */
+/*   Updated: 2023/12/15 01:36:20 by mel-houd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,18 +46,20 @@ int		mini_parser(char *command1, char *command2)
 	return (0);
 }
 
-char	**check_command(char *command)
+char	**check_command(char *command, char **path_splited)
 {
 	char	**com;
 	int		i;
 	char	*str;
-	char	*paths[7] = {"/bin/", "/sbin/", "/usr/bin/", "/usr/sbin/", "/usr/local/bin/", "/usr/local/sbin/", NULL};
 
+	if (path_splited == NULL)
+		return (NULL);
 	com = ft_split(command, ' ');
+	com[0] = ft_strjoin("/", com[0]);
 	i = 0;
-	while (paths[i])
+	while (path_splited[i])
 	{
-		str = ft_strjoin(paths[i], com[0]);
+		str = ft_strjoin(path_splited[i], com[0]);
 		if (access(str, X_OK) == 0)
 		{
 			free(com[0]);

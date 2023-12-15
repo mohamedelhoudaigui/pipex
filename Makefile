@@ -9,6 +9,7 @@ SRCS = ./libft/printf/ft_printf.c \
 	   parsing.c \
 	   err_handler.c \
 	   init_handler.c \
+	   get_path.c \
        ./libft/ft_isalpha.c ./libft/ft_isprint.c ./libft/ft_memcmp.c  ./libft/ft_putchar_fd.c ./libft/ft_split.c \
 	./libft/ft_strlcat.c ./libft/ft_strncmp.c ./libft/ft_substr.c ./libft/ft_atoi.c ./libft/ft_isalnum.c \
 	./libft/ft_itoa.c ./libft/ft_memcpy.c  ./libft/ft_putendl_fd.c ./libft/ft_strchr.c  ./libft/ft_strlcpy.c \
@@ -19,7 +20,6 @@ SRCS = ./libft/printf/ft_printf.c \
 	./libft/ft_lstadd_back_bonus.c ./libft/ft_lstadd_front_bonus.c ./libft/ft_lstclear_bonus.c \
 	./libft/ft_lstdelone_bonus.c ./libft/ft_lstiter_bonus.c ./libft/ft_lstlast_bonus.c \
 	./libft/ft_lstmap_bonus.c ./libft/ft_lstnew_bonus.c ./libft/ft_lstsize_bonus.c \
-	./libft/get_next_line.c ./libft/get_next_line_utils.c
 
 # Compiler and flags
 CC = cc
@@ -30,10 +30,10 @@ NAME = pipex
 all: $(NAME)
 
 $(NAME): $(SRCS) pipex.h Makefile
-	$(CC) $(CFLAGS) -o $(NAME) $(SRCS)
+	@$(CC) $(CFLAGS) -o $(NAME) $(SRCS)
 
 clean:
-	$(RM) $(NAME)
+	@$(RM) $(NAME)
 
 fclean: clean
 

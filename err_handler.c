@@ -6,7 +6,7 @@
 /*   By: mel-houd <mel-houd@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 02:51:55 by mel-houd          #+#    #+#             */
-/*   Updated: 2023/12/14 07:51:13 by mel-houd         ###   ########.fr       */
+/*   Updated: 2023/12/15 01:26:19 by mel-houd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int		error_handler(int infile, int outfile, int *fd_pipe, char **com1, char **co
 	}
 	if (com1 == NULL || com2 == NULL)
 	{
-		ft_printf("malloc fail or command not found !\n");
+		ft_printf("command not found !\n");
 		close(infile);
 		close(outfile);
 		return (1);
