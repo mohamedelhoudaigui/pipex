@@ -6,7 +6,7 @@
 /*   By: mel-houd <mel-houd@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 02:50:08 by mel-houd          #+#    #+#             */
-/*   Updated: 2023/12/17 17:46:55 by mel-houd         ###   ########.fr       */
+/*   Updated: 2023/12/18 21:23:02 by mel-houd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ typedef struct s_pipex
 	int		freed;
 	int		**fd;
 	char	**av;
+	char	**env;
 	char	**splited_path;
 	char	***str;
 	char	***exec_args;

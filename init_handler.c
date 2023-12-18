@@ -6,7 +6,7 @@
 /*   By: mel-houd <mel-houd@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 03:31:06 by mel-houd          #+#    #+#             */
-/*   Updated: 2023/12/18 11:10:20 by mel-houd         ###   ########.fr       */
+/*   Updated: 2023/12/19 00:04:26 by mel-houd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,10 @@ void	init_pipes(t_pipex *args)
 	int	i;
 
 	i = 0;
-	args->fd = (int **)ft_calloc(sizeof(int *), args->ac - 1);
+	args->fd = (int **)ft_calloc(sizeof(int *), args->ac - 3);
 	if (!args->fd)
 		return ;
-	while (i < args->ac - 2)
+	while (i < args->ac - 4)
 	{
 		args->fd[i] = (int *)ft_calloc(sizeof(int), 2);
 		pipe(args->fd[i]);
@@ -61,10 +61,11 @@ int	init_variables(t_pipex *args, char **av, char **env, int ac)
 	args->freed = 0;
 	args->av = av;
 	args->ac = ac;
+	args->env = env;
 	args->splited_path = split_path(env);
 	args->str = all_commands(args);
 	args->input = open(av[1], O_RDWR | O_CREAT, 0777);
-	args->output = open(av[ac - 1], O_RDWR | O_CREAT, 0777);
+	args->output = open(av[ac - 1], O_RDWR | O_CREAT | O_TRUNC, 0777);
 	init_pipes(args);
 	init_args(args);
 	init_pid(args);
