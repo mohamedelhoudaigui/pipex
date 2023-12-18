@@ -6,7 +6,7 @@
 /*   By: mel-houd <mel-houd@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 02:50:08 by mel-houd          #+#    #+#             */
-/*   Updated: 2023/12/16 00:51:23 by mel-houd         ###   ########.fr       */
+/*   Updated: 2023/12/17 17:46:55 by mel-houd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,27 +26,29 @@ typedef struct s_pipex
 {
 	int		input;
 	int		output;
-	char	**str;
-	char	**str2;
-	int		fd[2];
-	int		pid;
-	int		pid2;
-	char	**exec_args;
-	char	**exec_args2;
+	int		ac;
+	pid_t	*pid;
+	int		freed;
+	int		**fd;
+	char	**av;
 	char	**splited_path;
+	char	***str;
+	char	***exec_args;
 }	t_pipex;
 
 int		check_only_spaces(char *str);
 int		mini_parser(char **av, int ac);
 char	**check_command(char *command, char **path_splited);
+char	***all_commands(t_pipex *args);
 
 int		error_handler(t_pipex *args);
 int		check_pid(int pid);
 void	free_dpointer(t_pipex *args_add);
 
-int		init_variables(t_pipex *args, char **av, char **env);
+void	init_args(t_pipex *args);
+int		init_variables(t_pipex *args, char **av, char **env, int ac);
 
-void	process_job(int *fd, char **exec_args, int inout, char str);
+void	process_job(t_pipex *args, int i);
 
 char	**split_path(char **env_addrs);
 

@@ -6,7 +6,7 @@
 /*   By: mel-houd <mel-houd@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 02:49:12 by mel-houd          #+#    #+#             */
-/*   Updated: 2023/12/16 00:33:53 by mel-houd         ###   ########.fr       */
+/*   Updated: 2023/12/17 13:11:52 by mel-houd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,39 @@ int	mini_parser(char **av, int ac)
 		i++;
 	}
 	return (0);
+}
+
+char	***all_commands(t_pipex *args)
+{
+	int		i;
+	int		j;
+	char	***all_command;
+
+	all_command = (char ***)malloc(sizeof(char **) * args->ac - 3);
+	if (!all_command)
+		return (NULL);
+	i = 0;
+	while (i < args->ac - 3)
+	{
+		all_command[i] = check_command(args->av[i + 2], args->splited_path);
+		if (!all_command[i])
+		{
+			i--;
+			while (all_command[i])
+			{
+				j = 0;
+				while (all_command[i] && all_command[i][j])
+					free(all_command[i][j++]);
+				free(all_command[i]);
+				i--;
+			}
+			free(all_command);
+			return (NULL);
+		}
+		i++;
+	}
+	all_command[i] = NULL;
+	return (all_command);
 }
 
 char	**check_command(char *command, char **path_splited)

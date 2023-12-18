@@ -6,28 +6,69 @@
 /*   By: mel-houd <mel-houd@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 03:31:06 by mel-houd          #+#    #+#             */
-/*   Updated: 2023/12/16 00:42:23 by mel-houd         ###   ########.fr       */
+/*   Updated: 2023/12/18 11:10:20 by mel-houd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-int	init_variables(t_pipex *args, char **av, char **env)
+void	init_args(t_pipex *args)
 {
+	int	i;
+
+	if (args->str == NULL)
+	{
+		args->exec_args = NULL;
+		return ;
+	}
+	args->exec_args = (char ***)ft_calloc(sizeof(char **), args->ac - 2);
+	if (!args->exec_args)
+		return ;
+	i = 0;
+	while (args->str[i])
+	{
+		args->exec_args[i] = args->str[i];
+		i++;
+	}
+	args->exec_args[i] = NULL;
+}
+
+void	init_pipes(t_pipex *args)
+{
+	int	i;
+
+	i = 0;
+	args->fd = (int **)ft_calloc(sizeof(int *), args->ac - 1);
+	if (!args->fd)
+		return ;
+	while (i < args->ac - 2)
+	{
+		args->fd[i] = (int *)ft_calloc(sizeof(int), 2);
+		pipe(args->fd[i]);
+		i++;
+	}
+}
+
+void	init_pid(t_pipex *args)
+{
+	args->pid = (pid_t *)malloc(sizeof(int) * args->ac - 3);
+	if (!args->pid)
+		return ;
+}
+
+int	init_variables(t_pipex *args, char **av, char **env, int ac)
+{
+	args->freed = 0;
+	args->av = av;
+	args->ac = ac;
 	args->splited_path = split_path(env);
-	args->exec_args = (char **)ft_calloc(3, sizeof(char *));
-	args->exec_args2 = (char **)ft_calloc(3, sizeof(char *));
-	args->str = check_command(av[2], args->splited_path);
-	args->str2 = check_command(av[3], args->splited_path);
+	args->str = all_commands(args);
 	args->input = open(av[1], O_RDWR | O_CREAT, 0777);
-	args->output = open(av[4], O_RDWR | O_CREAT, 0777);
+	args->output = open(av[ac - 1], O_RDWR | O_CREAT, 0777);
+	init_pipes(args);
+	init_args(args);
+	init_pid(args);
 	if (error_handler(args) == 1)	
 		return (1);
-	args->exec_args[0] = args->str[0];
-	args->exec_args2[0] = args->str2[0];
-	if (args->str[1] != NULL)
-		args->exec_args[1] = args->str[1];
-	if (args->str2[1] != NULL)
-		args->exec_args2[1] = args->str2[1];
 	return (0);
 }
