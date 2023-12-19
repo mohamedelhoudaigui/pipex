@@ -6,7 +6,7 @@
 /*   By: mel-houd <mel-houd@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 08:30:18 by mel-houd          #+#    #+#             */
-/*   Updated: 2023/12/19 01:05:00 by mel-houd         ###   ########.fr       */
+/*   Updated: 2023/12/19 02:15:49 by mel-houd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ void	process_job(t_pipex *args, int i)
 		close(args->output);
 		execve(args->exec_args[0][0], args->exec_args[0], args->env);
 		perror("execve error");
+		exit(0);
 	}
 	else if (i == args->ac - 4)
 	{
@@ -35,6 +36,7 @@ void	process_job(t_pipex *args, int i)
 		close(args->output);
 		execve(args->exec_args[i][0], args->exec_args[i], args->env);
 		perror("execve error");
+		exit(0);
 	}
 	else
 	{
@@ -47,6 +49,7 @@ void	process_job(t_pipex *args, int i)
 		close(args->input);
 		execve(args->exec_args[i][0], args->exec_args[i], args->env);
 		perror("execve error");
+		exit(0);
 	}
 }
 
