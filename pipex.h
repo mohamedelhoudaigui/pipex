@@ -6,7 +6,7 @@
 /*   By: mel-houd <mel-houd@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 02:50:08 by mel-houd          #+#    #+#             */
-/*   Updated: 2023/12/18 21:23:02 by mel-houd         ###   ########.fr       */
+/*   Updated: 2023/12/19 00:30:24 by mel-houd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,5 +54,7 @@ void	process_job(t_pipex *args, int i);
 char	**split_path(char **env_addrs);
 
 t_pipex	*pipex(int ac, char **av, char **env);
+
+void	pipe_ctl(t_pipex *args, int i);
 
 #endif

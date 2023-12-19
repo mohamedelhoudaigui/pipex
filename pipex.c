@@ -6,7 +6,7 @@
 /*   By: mel-houd <mel-houd@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 08:30:18 by mel-houd          #+#    #+#             */
-/*   Updated: 2023/12/18 21:25:06 by mel-houd         ###   ########.fr       */
+/*   Updated: 2023/12/19 01:05:00 by mel-houd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,7 @@ void	process_job(t_pipex *args, int i)
 {
 	if (i == 0)
 	{
-		ft_printf("here 1\n");
-		
+		pipe_ctl(args, i);
 		dup2(args->fd[0][1], 1);
 		dup2(args->input, 0);
 		close(args->fd[0][1]);
@@ -26,35 +25,26 @@ void	process_job(t_pipex *args, int i)
 		execve(args->exec_args[0][0], args->exec_args[0], args->env);
 		perror("execve error");
 	}
-	else if (i == 1)
+	else if (i == args->ac - 4)
 	{
-		ft_printf("here 2\n");
-		close(args->fd[0][1]);
-		close(args->fd[1][0]);
-		close(args->fd[2][1]);
-		close(args->fd[2][0]);
-		dup2(args->fd[0][0], 0);
-		dup2(args->fd[1][1], 1);
-		close(args->fd[1][1]);
-		close(args->fd[0][0]);
-		close(args->output);
+		pipe_ctl(args, i);
+		dup2(args->output, 1);
+		dup2(args->fd[i - 1][0], 0);
+		close(args->fd[i - 1][0]);
 		close(args->input);
+		close(args->output);
 		execve(args->exec_args[i][0], args->exec_args[i], args->env);
 		perror("execve error");
 	}
-	else if (i == 2)
+	else
 	{
-		ft_printf("here 3\n");
-		close(args->fd[0][0]);
-		close(args->fd[0][1]);
-		close(args->fd[2][0]);
-		close(args->fd[2][1]);
-		close(args->fd[1][1]);
-		dup2(args->output, 1);
-		dup2(args->fd[1][0], 0);
-		close(args->fd[1][0]);
-		close(args->input);
+		pipe_ctl(args, i);
+		dup2(args->fd[i - 1][0], 0);
+		dup2(args->fd[i][1], 1);
+		close(args->fd[i][1]);
+		close(args->fd[i - 1][0]);
 		close(args->output);
+		close(args->input);
 		execve(args->exec_args[i][0], args->exec_args[i], args->env);
 		perror("execve error");
 	}
@@ -62,12 +52,14 @@ void	process_job(t_pipex *args, int i)
 
 void	main_helper(t_pipex *args)
 {
-	close(args->fd[0][0]);
-	close(args->fd[0][1]);
-	close(args->fd[1][0]);
-	close(args->fd[1][1]);
-	close(args->fd[2][0]);
-	close(args->fd[2][1]);
+	int	i;
+	i = 0;
+	while (i < args->ac - 4)
+	{
+		close(args->fd[i][0]);
+		close(args->fd[i][1]);
+		i++;
+	}
 	close(args->input);
 	close(args->output);
 }
@@ -95,15 +87,16 @@ t_pipex	*pipex(int ac, char **av, char **env)
 		i++;
 	}
 	main_helper(args);
+	i = 0;
 	while (i < args->ac - 4)
-		waitpid(args->pid[i], NULL, i);
+		waitpid(args->pid[i++], NULL, 0);
 	return (args);
 }
 
 int	main(int ac, char **av, char **env)
 {
 	t_pipex	*args;
-	
+
 	if (ac >= 5)
 	{
 		args = pipex(ac, av, env);
