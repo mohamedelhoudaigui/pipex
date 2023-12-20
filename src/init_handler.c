@@ -6,7 +6,7 @@
 /*   By: mel-houd <mel-houd@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 03:31:06 by mel-houd          #+#    #+#             */
-/*   Updated: 2023/12/19 00:56:43 by mel-houd         ###   ########.fr       */
+/*   Updated: 2023/12/20 04:27:37 by mel-houd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,15 +56,45 @@ void	init_pid(t_pipex *args)
 		return ;
 }
 
+void	change_av(t_pipex *args)
+{
+	int		i;
+	int		j;
+
+	i = 0;
+	j = 0;
+	args->change_av = (char **)ft_calloc(sizeof(char *), args->ac - 1);
+	if (!args->change_av)
+		return ;
+	while (args->av[i])
+	{
+		if (i == 2)
+			i++;
+		args->change_av[j] = args->av[i];
+		j++;
+		i++;
+	}
+}
+
 int	init_variables(t_pipex *args, char **av, char **env, int ac)
 {
 	args->freed = 0;
 	args->av = av;
 	args->ac = ac;
 	args->env = env;
+	args->change_av = NULL;
 	args->splited_path = split_path(env);
+	if (here_doc_parse(av) == 0)
+	{
+		if (here_doc(args)!= 0)
+			return (1);
+		change_av(args);
+		args->av = args->change_av;
+		args->ac = args->ac - 1;
+	}
+	else
+		args->input = open(av[1], O_RDWR | O_CREAT, 0777);
 	args->str = all_commands(args);
-	args->input = open(av[1], O_RDWR | O_CREAT, 0777);
 	args->output = open(av[ac - 1], O_RDWR | O_CREAT | O_TRUNC, 0777);
 	init_pipes(args);
 	init_args(args);

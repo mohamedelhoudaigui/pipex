@@ -1,36 +1,36 @@
 # Source files
-SRCS = ./libft/printf/ft_printf.c \
-       ./libft/printf/ft_printf_hex.c \
-       ./libft/printf/ft_printf_pointer.c \
-       ./libft/printf/ft_printf_nbr.c \
-       ./libft/printf/ft_printf_parser.c \
-       ./libft/printf/ft_printf_str.c \
-       pipex.c \
-	   parsing.c \
-	   err_handler.c \
-	   init_handler.c \
-	   get_path.c \
-	   fd_ctl.c \
-       ./libft/ft_isalpha.c ./libft/ft_isprint.c ./libft/ft_memcmp.c  ./libft/ft_putchar_fd.c ./libft/ft_split.c \
-	./libft/ft_strlcat.c ./libft/ft_strncmp.c ./libft/ft_substr.c ./libft/ft_atoi.c ./libft/ft_isalnum.c \
-	./libft/ft_itoa.c ./libft/ft_memcpy.c  ./libft/ft_putendl_fd.c ./libft/ft_strchr.c  ./libft/ft_strlcpy.c \
-	./libft/ft_strnstr.c ./libft/ft_tolower.c ./libft/ft_bzero.c   ./libft/ft_isascii.c \
-	./libft/ft_memmove.c ./libft/ft_putnbr_fd.c  ./libft/ft_strdup.c  ./libft/ft_strlen.c  ./libft/ft_strrchr.c \
-	./libft/ft_toupper.c ./libft/ft_calloc.c  ./libft/ft_isdigit.c ./libft/ft_memchr.c  ./libft/ft_memset.c  \
-	./libft/ft_putstr_fd.c  ./libft/ft_strjoin.c ./libft/ft_strmapi.c ./libft/ft_strtrim.c ./libft/ft_striteri.c \
-	./libft/ft_lstadd_back_bonus.c ./libft/ft_lstadd_front_bonus.c ./libft/ft_lstclear_bonus.c \
-	./libft/ft_lstdelone_bonus.c ./libft/ft_lstiter_bonus.c ./libft/ft_lstlast_bonus.c \
-	./libft/ft_lstmap_bonus.c ./libft/ft_lstnew_bonus.c ./libft/ft_lstsize_bonus.c \
+SRCS = ./src/libft/printf/ft_printf.c \
+       ./src/libft/printf/ft_printf_hex.c \
+       ./src/libft/printf/ft_printf_pointer.c \
+       ./src/libft/printf/ft_printf_nbr.c \
+       ./src/libft/printf/ft_printf_parser.c \
+       ./src/libft/printf/ft_printf_str.c \
+	   ./src/libft/get_next_line/get_next_line.c \
+	   ./src/libft/get_next_line/get_next_line_utils.c \
+       ./src/pipex.c \
+	   ./src/parsing.c \
+	   ./src/err_handler.c \
+	   ./src/init_handler.c \
+	   ./src/get_path.c \
+	   ./src/fd_ctl.c \
+	   ./src/here_doc.c \
+       ./src/libft/ft_isalpha.c ./src/libft/ft_isprint.c ./src/libft/ft_memcmp.c  ./src/libft/ft_putchar_fd.c ./src/libft/ft_split.c \
+	./src/libft/ft_strlcat.c ./src/libft/ft_strncmp.c ./src/libft/ft_substr.c ./src/libft/ft_atoi.c ./src/libft/ft_isalnum.c \
+	./src/libft/ft_itoa.c ./src/libft/ft_memcpy.c  ./src/libft/ft_putendl_fd.c ./src/libft/ft_strchr.c  ./src/libft/ft_strlcpy.c \
+	./src/libft/ft_strnstr.c ./src/libft/ft_tolower.c ./src/libft/ft_bzero.c   ./src/libft/ft_isascii.c \
+	./src/libft/ft_memmove.c ./src/libft/ft_putnbr_fd.c  ./src/libft/ft_strdup.c  ./src/libft/ft_strlen.c  ./src/libft/ft_strrchr.c \
+	./src/libft/ft_toupper.c ./src/libft/ft_calloc.c  ./src/libft/ft_isdigit.c ./src/libft/ft_memchr.c  ./src/libft/ft_memset.c  \
+	./src/libft/ft_putstr_fd.c  ./src/libft/ft_strjoin.c ./src/libft/ft_strmapi.c ./src/libft/ft_strtrim.c ./src/libft/ft_striteri.c \
 
 # Compiler and flags
 CC = cc
-CFLAGS = -Wall -Wextra -Werror #-fsanitize=address
+CFLAGS = -Wall -Wextra -Werror
 
 NAME = pipex
 
 all: $(NAME)
 
-$(NAME): $(SRCS) pipex.h Makefile
+$(NAME): $(SRCS) ./src/pipex.h Makefile
 	@$(CC) $(CFLAGS) -o $(NAME) $(SRCS)
 
 clean:

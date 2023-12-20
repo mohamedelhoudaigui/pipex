@@ -6,7 +6,7 @@
 /*   By: mel-houd <mel-houd@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 02:51:55 by mel-houd          #+#    #+#             */
-/*   Updated: 2023/12/18 15:02:59 by mel-houd         ###   ########.fr       */
+/*   Updated: 2023/12/20 04:24:18 by mel-houd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,9 +57,11 @@ void	free_dpointer(t_pipex *args)
 			free(args->fd[i++]);
 		free(args->fd);
 	}
+	if (args->change_av != NULL)
+		free(args->change_av);
 	i = 0;
 	j = 0;
-	if (args->exec_args != NULL)
+	if (args->exec_args)
 	{
 		while (args->exec_args[i])
 		{
@@ -74,8 +76,11 @@ void	free_dpointer(t_pipex *args)
 	free(args->str);
 	free(args->pid);
 	i = 0;
-	while (args->splited_path[i])
-		free(args->splited_path[i++]);
-	free(args->splited_path);
+	if (args->splited_path)
+	{
+		while (args->splited_path[i])
+			free(args->splited_path[i++]);
+		free(args->splited_path);
+	}
 	args->freed = 1;
 }

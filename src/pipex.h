@@ -6,7 +6,7 @@
 /*   By: mel-houd <mel-houd@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 02:50:08 by mel-houd          #+#    #+#             */
-/*   Updated: 2023/12/19 00:30:24 by mel-houd         ###   ########.fr       */
+/*   Updated: 2023/12/20 02:18:06 by mel-houd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <limits.h>
 # include <stdlib.h>
 # include "./libft/libft.h"
+# include "./libft/get_next_line/get_next_line.h"
 # include "./libft/printf/ft_printf.h"
 
 typedef struct s_pipex
@@ -31,6 +32,7 @@ typedef struct s_pipex
 	int		freed;
 	int		**fd;
 	char	**av;
+	char	**change_av;
 	char	**env;
 	char	**splited_path;
 	char	***str;
@@ -38,7 +40,8 @@ typedef struct s_pipex
 }	t_pipex;
 
 int		check_only_spaces(char *str);
-int		mini_parser(char **av, int ac);
+int		mini_parser(char **av);
+int		here_doc_parse(char **av);
 char	**check_command(char *command, char **path_splited);
 char	***all_commands(t_pipex *args);
 
@@ -56,5 +59,7 @@ char	**split_path(char **env_addrs);
 t_pipex	*pipex(int ac, char **av, char **env);
 
 void	pipe_ctl(t_pipex *args, int i);
+
+int		here_doc(t_pipex *args);
 
 #endif

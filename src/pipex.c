@@ -6,11 +6,16 @@
 /*   By: mel-houd <mel-houd@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 08:30:18 by mel-houd          #+#    #+#             */
-/*   Updated: 2023/12/19 02:15:49 by mel-houd         ###   ########.fr       */
+/*   Updated: 2023/12/20 08:22:24 by mel-houd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
+
+void	f()
+{
+	system("leaks pipex");
+}
 
 void	process_job(t_pipex *args, int i)
 {
@@ -72,7 +77,7 @@ t_pipex	*pipex(int ac, char **av, char **env)
 	t_pipex	*args;
 	int		i;
 
-	if (mini_parser(av, ac) == 1)
+	if (mini_parser(av) == 1)
 			return (NULL);
 	args = (t_pipex *)malloc(sizeof(t_pipex));
 	if (!args)
@@ -80,7 +85,7 @@ t_pipex	*pipex(int ac, char **av, char **env)
 	if (init_variables(args, av, env, ac) == 1)
 		return (args);
 	i = 0;
-	while (i < ac - 3)
+	while (i < args->ac - 3)
 	{
 		args->pid[i] = fork();
 		if (check_pid(args->pid[i]) == 1)
@@ -98,8 +103,8 @@ t_pipex	*pipex(int ac, char **av, char **env)
 
 int	main(int ac, char **av, char **env)
 {
+	atexit(f);
 	t_pipex	*args;
-
 	if (ac >= 5)
 	{
 		args = pipex(ac, av, env);
@@ -107,7 +112,8 @@ int	main(int ac, char **av, char **env)
 			return (1);
 		else
 		{
-			free_dpointer(args);
+			if (args->freed == 0)
+				free_dpointer(args);
 			free(args);
 			return (0);
 		}

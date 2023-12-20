@@ -6,7 +6,7 @@
 /*   By: mel-houd <mel-houd@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/14 02:49:12 by mel-houd          #+#    #+#             */
-/*   Updated: 2023/12/17 13:11:52 by mel-houd         ###   ########.fr       */
+/*   Updated: 2023/12/20 08:27:56 by mel-houd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,20 +26,18 @@ int	check_only_spaces(char *str)
 	return (1);
 }
 
-int	mini_parser(char **av, int ac)
+int	mini_parser(char **av)
 {
 	int	i;
 
 	i = 1;
 	while (av[i])
 	{
-		if (i == 1)
+		if (ft_strncmp(av[1], "here_doc", ft_strlen(av[1])) == 0 && ft_strlen(av[1]) == 8)
 		{
-			if (av[i][0] == '\0' || av[ac - 1][0] == '\0')
-			{
-				ft_printf("invalid files\n");
-				return (1);
-			}
+			if (i == 2)
+				if (av[2][0] == '\0')
+					i++;		
 		}
 		else if (av[i][0] == '\0' || check_only_spaces(av[i]) == 1)
 		{
@@ -49,6 +47,28 @@ int	mini_parser(char **av, int ac)
 		i++;
 	}
 	return (0);
+}
+
+int		here_doc_parse(char **av)
+{
+	int		i;
+
+	i = 1;
+	if (ft_strncmp(av[1], "here_doc", ft_strlen(av[1])) == 0 && ft_strlen(av[1]) == 8)
+	{
+		i += 2;
+		while (av[i])
+		{
+			if (av[i][0] == '\0' || check_only_spaces(av[i]) == 1)
+			{
+				ft_printf("invalid input\n");
+				return (1);
+			}
+			i++;
+		}
+		return (0);
+	}
+	return (2);
 }
 
 char	***all_commands(t_pipex *args)
@@ -66,14 +86,14 @@ char	***all_commands(t_pipex *args)
 		all_command[i] = check_command(args->av[i + 2], args->splited_path);
 		if (!all_command[i])
 		{
-			i--;
+			i = 0;
 			while (all_command[i])
 			{
 				j = 0;
 				while (all_command[i] && all_command[i][j])
 					free(all_command[i][j++]);
 				free(all_command[i]);
-				i--;
+				i++;
 			}
 			free(all_command);
 			return (NULL);
